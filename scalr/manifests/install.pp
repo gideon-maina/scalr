@@ -17,19 +17,31 @@ $php_ldap = $scalr::params::php_ldap,
 $python_dev = $scalr::params::python_dev,
 $python_libevent = $scalr::params::$python_libevent,
 $python_pip = $scalr::params::python_pip,
+$python_rrdtool = $scalr::params::python_rrdtool,
+$pecl_http = $scalr::params::pecl_http,
+$pecl_rrd = $scalr::params::pecl_rrd,
+$pecl_yaml = $scalr::params::pecl_yaml,
+$pecl_ssh2 = $scalr::params::pecl_ssh2,
 $snmp_mibs = $scalr::params::snmp_mibs,
 $rrdtool = $scalr::params::rrdtool,
 $rrdcached = $scalr::params::rrdcached,
 $apache = $scalr::params::apache,
-$cron = $scalr::params::cron
-
+$cron = $scalr::params::cron,
+$python_m2crypto = $scalr::params::python_m2crypto,
+$python_snmp = scalr::params::$python_snmp,
+$snmp_base = scalr::params::snmp_base
+$snmp15 = scalr::params::snmp15
+$snmp = scalr::params::snmp
+$scalr_source_url = scalr::params::scalr_source_url,
+$scalr_install_dir = scalr::params::scalr_install_dir
 ) 
 
 inherits scalr::params {
 	#Php dependencies using system package manager
 	package {'Php':
 		name => $php,
-		ensure => present
+		ensure => "5.5",
+		require => Exec["apt-get update"]
 
 	}
 	#Php extensions using system package manager
@@ -86,7 +98,37 @@ inherits scalr::params {
 		ensure => present
 
 	}
-	#Python packages using pip
+	#Php Pecls using pecl
+###################	
+	#$php_pecls = ["$pecl_http","$pecl_rrd","$pecl_yaml","$pecl_ssh2",]
+	#package {$php_pecls:
+	#	ensure => present,
+	#	provider => pecl
+	#}
+#################
+	#Make sure that the http pecl is less than version 2
+	package {'Pecl http':
+		name => $pecl_http,
+		ensure => "1.7.6",
+		provider => pecl
+	}
+	package {'Pecl rrd':
+		name => $pecl_rrd,
+		ensure => present,
+		provider => pecl
+	}
+	package {'Pecl yaml':
+		name => $pecl_yaml,
+		ensure => present,
+		provider => pecl
+	}
+	package {'Pecl ssh2':
+		name => $pecl_ssh2,
+		ensure => present,
+		provider => pecl
+	}
+
+	#Python system packages
 	package {'python dev':
 		name => $python_dev,
 		ensure = present
@@ -98,18 +140,60 @@ inherits scalr::params {
 	}
 	package {'Python pip':
 		name => $python_pip,
-		ensure => present
-	}	
+		ensure => present,
+		provider => pip
+	}
 
-	#Php Pecls using pecl
-
+	#Python packages using pip	
+	package {'Python rrdtool':
+		name => $python_rrdtool,
+		ensure => present,
+		provider => pip
+	}
+	package {'Python M2Crypto':
+		name => $python_m2crypto,
+		ensure => present,
+		provider => pip,
+	}
+	#Python snmp bindings and the related packages
+	package {'Snmp and also Python bindings':
+		name => $python_snmp,
+		ensure => present,
+	}
+	package {'Snmp base':
+		name => $snmp_base,
+	ensure => present,
+	}
+	package {'snmp15 package':
+		name => $snmp15,
+	ensure => present,
+	}
+	package {'Snmp package':
+		name => $snmp,
+	ensure => present,
+	}
 	#Ensure  upto date SNMP MIBS
 	package {'snmp mibs':
 		name => $snmp_mibs,
-		ensure => present
+		ensure => latest,
 	}
 
 	#Get the latest source scalr(download) to the install_directory
+	exec {'download the scalr source':
+		command => "wget ${scalr_source_url}",
+		creates => "${scalr_install_dir}/${scalr_source_url}/",
+		require => File[$scalr_install_dir],
+	}
+	#Extract the scalr tar.gz downloaded
+	-> exec {'Extract the scalr tar.gz':
+		command => "tar zxvf ${scalr_install_dir}/${scalr_source_url}",
+		creates => "${scalr_install_dir}/${scalr_source_url}/",
+	}
+	#Installing the scalr 
+	~> exec {'Instaling scalrPy':
+		command => "python setup.py install",
+		cwd => "${scalr_install_dir}/${scalr_source_url}/"
+	}
 
 	#Install Mysql 
 

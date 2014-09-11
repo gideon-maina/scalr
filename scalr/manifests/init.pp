@@ -2,9 +2,6 @@
 #scalr module and integration with the other classes
 
 
-class scalr(
-
-)
-{
-
+class scalr{
+	
 }

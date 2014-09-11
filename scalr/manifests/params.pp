@@ -8,10 +8,6 @@ class scalr::params {
 	$super_user = 'root'
 	$scalr_group = 'scalr'
 
-	$scalr_source_url = 'https://github.com/Scalr/scalr/archive/v4.5.1.tar.gz'
-	#Would like the version given as a user input
-	
-	$scalr_install_dir = '/opt/scalr/'
 	$scalr_errorlog = '/var/log/scalr-error.log'
 	$scalr_accesslog = '/var/log/scalr-access.log'
 	$message_sender_pidfile = ''
@@ -52,6 +48,10 @@ class scalr::params {
 		$python_dev = 'python-dev'
 		$python_libevent = 'libevent-dev'
 		$python_pip = 'python-setuptools'
+		$python_snmp = 'libsnmp-python'
+		$snmp_base = 'libsnmp-base'
+		$snmp15 = 'libsnmp15'
+		$snmp = 'snmp'
 		$snmp_mibs = 'snmp-mibs-downloader package'
 		$rrdtool = 'rrdtool'
 		$rrddcached = 'rrdcached'
@@ -78,6 +78,10 @@ class scalr::params {
 		$python_dev = ''
 		$python_lebevent = ''
 		$python_pip = ''
+		$python_snmp = 'libsnmp-python'
+		$snmp_base = 'libsnmp-base'
+		$snmp15 = 'libsnmp15'
+		$snmp = 'snmp'
 		$snmp_mibs = ''
 		$rrdtool = 'rrdtool'
 		$rrddcached = 'rrdcached'
@@ -103,6 +107,10 @@ class scalr::params {
 		$python_dev = ''
 		$python_lebevent = ''
 		$python_pip = ''
+		$python_snmp = 'libsnmp-python'
+		$snmp_base = 'libsnmp-base'
+		$snmp15 = 'libsnmp15'
+		$snmp = 'snmp'
 		$snmp_mibs = ''
 		$rrdtool = ''
 		$rrddcached = ''
@@ -128,6 +136,10 @@ class scalr::params {
 		$python_dev = 'python-dev'
 		$python_libevent = 'libevent-dev'
 		$python_pip = 'python-setuptools'
+		$python_snmp = 'libsnmp-python'
+		$snmp_base = 'libsnmp-base'
+		$snmp15 = 'libsnmp15'
+		$snmp = 'snmp'
 		$snmp_mibs = 'snmp-mibs-downloader package'
 		$rrdtool = 'rrdtool'
 		$rrddcached = 'rrdcached'
@@ -135,6 +147,20 @@ class scalr::params {
 		$cron = 'cron'
 	}
   }#End case statement
+  #General packages that are universal for distros e.g for pip or pecl
+  	$python_rrdtool = 'python-rrdtool'
+	$pecl_http = 'pecl_http'
+	$pecl_rrd = 'rrd'
+	pecl_yaml = 'yaml'
+	$pecl_ssh2 = 'ssh2'
+  #Scalr install parameters
+  	$scalr_source_url = 'https://github.com/Scalr/scalr/archive/v4.5.1.tar.gz'
+  	$scalr_install_dir = '/opt/scalr/'
+#Would like the version given as a user input
+
+#python M2crypto 
+	$python_m2crypto = 'M2Crypto'
+
 
 #Other general parameters that are needed by the scalr instance
 
@@ -142,7 +168,7 @@ class scalr::params {
 	$mysql_user = 'scalr'
 	$mysql_password = 'Thepassword'
 	$mysql_scalr_database = 'scalr'
-	$mysql_scalr_cost_analytics = scalr_analytics''
+	$mysql_scalr_cost_analytics = 'scalr_analytics'
 	$mysql_timezone = 'UTC'
 
 	$graphics_dir = '$scalr_install_dir/app/www/graphics'
