@@ -1,0 +1,16 @@
+Need to get 20.9 kB of archives.
+After this operation, 118 kB of additional disk space will be used.
+Get:1 http://ppa.launchpad.net/ondrej/php5/ubuntu/ trusty/main php5-ldap amd64 5.5.16+dfsg-1+deb.sury.org~trusty+1 [20.9 kB]
+Fetched 20.9 kB in 0s (451 kB/s)     
+Selecting previously unselected package php5-ldap.
+(Reading database ... 81633 files and directories currently installed.)
+Preparing to unpack .../php5-ldap_5.5.16+dfsg-1+deb.sury.org~trusty+1_amd64.deb ...
+Unpacking php5-ldap (5.5.16+dfsg-1+deb.sury.org~trusty+1) ...
+Processing triggers for libapache2-mod-php5 (5.5.16+dfsg-1+deb.sury.org~trusty+1) ...
+Setting up php5-ldap (5.5.16+dfsg-1+deb.sury.org~trusty+1) ...
+
+Creating config file /etc/php5/mods-available/ldap.ini with new version
+php5_invoke: Enable module ldap for cli SAPI
+php5_invoke: Enable module ldap for apache2 SAPI
+Processing triggers for libapache2-mod-php5 (5.5.16+dfsg-1+deb.sury.org~trusty+1) ...
+ubuntu@ip-172-31-3-105:~$ 
