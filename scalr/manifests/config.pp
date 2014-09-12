@@ -24,15 +24,15 @@ $module_name = $scalr::params::module_name,
 
 )
 inherits scalr::params {
-	#Php configuration 
+	#Php configuration and also 
+	#Ensuring that apache2 and cli SAPI's are affected 
+	#This will involve invoking with php5_invoke to reflect cli and apache2 sapis
 	file {"PHP ini file with necessary changes":
 		path => $php_ini,
 		ensure => file,
 		content => template($php_ini_template),
 	}
 	#Take care of SELinux unpacked directory to be accessible via the web server
-
-	#Ensuring that apache2 and cli SAPI's are affected 
 
 	#Configure the MySQL Scalr database user password and feed it with sql.
 
@@ -41,10 +41,23 @@ inherits scalr::params {
 	#Set MySQL timezone Php time zone
 
 	#Create the cache folder for Scalr
-
+	file {"cache folder inside scalr/app/":
+			path => $scalr_cache,
+			ensure => present,
+			mode => 0770,
+			owner => $service_user,
+			group => $scalr_group,
+	}
 	#Configure rrdcached by modifying /etc/default/rrdcached(restart the rrdcached service)
 	#Use augeas for the addition into the file 
-
+	augeas {"Modifying the file /etc/default/rrdcached":
+			context => $rrd_config,
+			changes => [PTS="-s ${scalr_group}"
+						OPTS="\$OPTS -l unix:/var/run/rrdcached.sock"
+						OPTS="\$OPTS -j /var/lib/rrdcached/journal/ -F"
+						OPTS="\$OPTS -b /var/lib/rrdcached/db/ -B"],
+			#need to refresh the rrdcached service after changes
+	}
 	#Create the required graph directories
 	#For raw data
 	#For generated graphs
