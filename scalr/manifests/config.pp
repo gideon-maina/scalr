@@ -21,6 +21,7 @@ $poller_logfile = $scalr::params::poller_logfile,
 $scalarizr_pidfile = $scalr::params::scalarizr_pidfile,
 $scalarizr_logfile = $scalr::params::scalarizr_logfile,
 $module_name = $scalr::params::module_name,
+<<<<<<< HEAD
 $rrd_config = '',
 scalr_new_config = '',
 
@@ -40,6 +41,17 @@ inherits scalr::params {
 	}
 	#Take care of SELinux unpacked directory to be accessible via the web server
 
+=======
+
+)
+inherits scalr::params {
+	#Php configuration 
+
+	#Take care of SELinux unpacked directory to be accessible via the web server
+
+	#Ensuring that apache2 and cli SAPI's are affected 
+
+>>>>>>> 621a7b7c76a6d3309ca25213688c338920753a1e
 	#Configure the MySQL Scalr database user password and feed it with sql.
 
 	#Configure the MySQL ScalCost_Analytics password and feed it with sql.
@@ -47,6 +59,7 @@ inherits scalr::params {
 	#Set MySQL timezone Php time zone
 
 	#Create the cache folder for Scalr
+<<<<<<< HEAD
 	file {"cache folder inside scalr/app/":
 			path => "${scalr_install_dir}/${scalr_cache_folder}/",
 			ensure => directory,
@@ -92,6 +105,21 @@ inherits scalr::params {
 			command => "cp ${scalr_install_dir}/${scalr_original_config ${scalr_install_dir}/${scalr_new_config} ",
 			creates => "{scalr_install_dir}/${scalr_new_config}",
 	}
+=======
+
+	#Configure rrdcached by modifying /etc/default/rrdcached(restart the rrdcached service)
+
+	#Create the required graph directories
+	#For raw data
+	#For generated graphs
+
+	#Set proper properties for the above directories
+
+	#Configure the Apache2 web server Virtualhost 
+
+	#Setting the configuration templates
+
+>>>>>>> 621a7b7c76a6d3309ca25213688c338920753a1e
 	#Run the database migrations
 
 	#Configure the scalr Cron jobs for the scalr instance(php cron jobs)
