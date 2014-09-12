@@ -8,7 +8,6 @@ class scalr::users (
 	$service_user = $scalr::params::service_user,
 	$web_user = $scalr::params::web_user,
 	$scalr_group = $scalr::params::scalr_group,
-<<<<<<< HEAD
 	$super_user = $scalr::params::super_user,
 	$user_group_provider = $scalr::params::user_provider,
 	$service_user_id = scalr::params::service_user_id,
@@ -40,10 +39,4 @@ inherits scalr::params {
 
 	}
 
-=======
-	$super_user = $scalr::params::super_user
-) {
-	#The following will ensure that the above users are present 
-	
->>>>>>> 621a7b7c76a6d3309ca25213688c338920753a1e
 }

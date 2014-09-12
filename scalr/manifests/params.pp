@@ -7,13 +7,10 @@ class scalr::params {
 	$web_user = 'www-data'
 	$super_user = 'root'
 	$scalr_group = 'scalr'
-<<<<<<< HEAD
 	$user_group_provider = 'ldap'
 	$service_user_id =''
 	$scalr_group_id = ''
 	#The above can be changed to pw useradd aix e.t.c
-=======
->>>>>>> 621a7b7c76a6d3309ca25213688c338920753a1e
 
 	$scalr_errorlog = '/var/log/scalr-error.log'
 	$scalr_accesslog = '/var/log/scalr-access.log'
@@ -163,10 +160,7 @@ class scalr::params {
   #Scalr install parameters
   	$scalr_source_url = 'https://github.com/Scalr/scalr/archive/v4.5.1.tar.gz'
   	$scalr_install_dir = '/opt/scalr/'
-<<<<<<< HEAD
   	$scalr_tar_target = '/tmp/scalr.tar.gz'
-=======
->>>>>>> 621a7b7c76a6d3309ca25213688c338920753a1e
 #Would like the version given as a user input
 
 #python M2crypto 
@@ -182,12 +176,8 @@ class scalr::params {
 	$mysql_scalr_cost_analytics = 'scalr_analytics'
 	$mysql_timezone = 'UTC'
 
-<<<<<<< HEAD
 	$scalr_cache_folder = 'cache'#put /scalr_install/app/ where used
 	$graphics_dir = 'graphics'#put /scalr_install/app/ where used
-=======
-	$graphics_dir = '$scalr_install_dir/app/www/graphics'
->>>>>>> 621a7b7c76a6d3309ca25213688c338920753a1e
 	$data_dir1 = '/var/lib/rrdcached/db/x1x6'
 	$data_dir2 = '/var/lib/rrdcached/db/x2x7'
 	$data_dir3 = '/var/lib/rrdcached/db/x3x8'
