@@ -21,9 +21,15 @@ $poller_logfile = $scalr::params::poller_logfile,
 $scalarizr_pidfile = $scalr::params::scalarizr_pidfile,
 $scalarizr_logfile = $scalr::params::scalarizr_logfile,
 $module_name = $scalr::params::module_name,
+$rrd_config = '',
+scalr_new_config = '',
 
 )
 inherits scalr::params {
+	#Global settings
+	Exec { 
+		path => [ "/bin/","/usr/bin", "/usr/local/sbin/" , "/usr/local/bin/" ] 
+	}
 	#Php configuration and also 
 	#Ensuring that apache2 and cli SAPI's are affected 
 	#This will involve invoking with php5_invoke to reflect cli and apache2 sapis
@@ -42,8 +48,8 @@ inherits scalr::params {
 
 	#Create the cache folder for Scalr
 	file {"cache folder inside scalr/app/":
-			path => $scalr_cache,
-			ensure => present,
+			path => "${scalr_install_dir}/${scalr_cache_folder}/",
+			ensure => directory,
 			mode => 0770,
 			owner => $service_user,
 			group => $scalr_group,
@@ -58,16 +64,34 @@ inherits scalr::params {
 						OPTS="\$OPTS -b /var/lib/rrdcached/db/ -B"],
 			#need to refresh the rrdcached service after changes
 	}
-	#Create the required graph directories
+	#Create the required graph directory
+	file {"Graph directories":
+			path => "${scalr_install_dir}/${graphics_dir}",
+			ensure => directory,
+			owner => $service_user,
+			group => $scalr_group,
+			mode => 0755,
+	}
 	#For raw data
-	#For generated graphs
-
-	#Set proper properties for the above directories
+	$raw_data_dirs = []
+	file {$raw_data_dirs:
+			ensure => directory,
+			mode => 0755,
+			owner => $service_user,
+			group => $scalr_group,
+	}
 
 	#Configure the Apache2 web server Virtualhost 
-
+	file {"Apache2 Virtualhost":
+			path => $apache2_config,
+			ensure => file,
+			content => template($apache_virtual_host.erb),
+	}
 	#Setting the configuration templates
-
+	exec {"Copying the scalr config to the working dir":
+			command => "cp ${scalr_install_dir}/${scalr_original_config ${scalr_install_dir}/${scalr_new_config} ",
+			creates => "{scalr_install_dir}/${scalr_new_config}",
+	}
 	#Run the database migrations
 
 	#Configure the scalr Cron jobs for the scalr instance(php cron jobs)

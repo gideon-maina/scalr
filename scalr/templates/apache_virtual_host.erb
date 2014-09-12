@@ -1,0 +1,17 @@
+	<VirtualHost *:80>
+    ServerName scalr.mydomain.com
+    ServerAdmin scalr@mydomain.com
+    DocumentRoot $SCALR_INSTALL/app/www
+    <Directory $SCALR_INSTALL/app/www>
+        Options -Indexes +FollowSymLinks +MultiViews
+        AllowOverride All
+        Order allow,deny
+        allow from all
+        Require all granted
+    </Directory>
+    ErrorLog /var/log/scalr-error.log
+    CustomLog /var/log/scalr-access.log combined
+    LogLevel warn
+	</VirtualHost>
+
+    Needs editing
