@@ -1,5 +1,10 @@
 issues
 
-To run python setup build and python set up install
+The input to place inside the apache.erb template at Servername
 
-To put pacakges in an array whether it will know what is th variable [$variable]
+facter can check whether SELinux is true or false
+
+How to add using augeas bringing problems
+
+Mysql integration 
+

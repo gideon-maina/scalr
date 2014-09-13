@@ -33,7 +33,6 @@ $snmp_base = scalr::params::snmp_base
 $snmp15 = scalr::params::snmp15
 $snmp = scalr::params::snmp
 $scalr_source_url = scalr::params::scalr_source_url,
-<<<<<<< HEAD
 $scalr_install_dir = scalr::params::scalr_install_dir,
 $scalr_tar_target = scalr::params::scalr_tar_target
 ) 
@@ -43,13 +42,6 @@ inherits scalr::params {
 	Exec { 
 		path => [ "/bin/","/usr/bin", "/usr/local/sbin/" , "/usr/local/bin/" ] 
 	}
-
-=======
-$scalr_install_dir = scalr::params::scalr_install_dir
-) 
-
-inherits scalr::params {
->>>>>>> 621a7b7c76a6d3309ca25213688c338920753a1e
 	#Php dependencies using system package manager
 	package {'Php':
 		name => $php,
@@ -192,26 +184,23 @@ inherits scalr::params {
 	}
 
 	#Get the latest source scalr(download) to the install_directory
-<<<<<<< HEAD
 	#Directory to have the scalr install
 	file {'The install location for Scalr':
 		path => $scalr_install_dir,
 		ensure => directory,
+		owner => $service_user,
+		group => $scalr_group,
+		#Get the service user to this class later 
 	}
-	exec {'download the scalr source':
-		command => "wget ${scalr_source_url} -O $scalr_tar_target",
-		creates => "${scalr_tar_target}",
-		timeout => 0,
-=======
+
 	exec {'download the scalr source':
 		command => "wget ${scalr_source_url}",
 		creates => "${scalr_install_dir}/${scalr_source_url}/",
->>>>>>> 621a7b7c76a6d3309ca25213688c338920753a1e
+		timeout => 0,
 		require => File[$scalr_install_dir],
 	}
 	#Extract the scalr tar.gz downloaded
 	-> exec {'Extract the scalr tar.gz':
-<<<<<<< HEAD
 		command => "tar zxvf ${scalr_tar_target} -C ${scalr_install_dir}",
 		creates => "${scalr_install_dir}/phpunit.xml",
 	}
@@ -221,22 +210,8 @@ inherits scalr::params {
 		cwd => "${scalr_install_dir}/app/python",
 	}
 	#Give ownership to the scalr/ directory to the scalr user
-  	exec {"Change ownership of the scalr dir":
-  		require => Class["scalr::users"],
-  		command => "chown -R ${scalr::params::service_user}:${scalr::params::scalr_group} ${scalr_install_dir}",
-  	}
-	#Give ownership to the scalr/app/www to www-data
-=======
-		command => "tar zxvf ${scalr_install_dir}/${scalr_source_url}",
-		creates => "${scalr_install_dir}/${scalr_source_url}/",
-	}
-	#Installing the scalr 
-	~> exec {'Instaling scalrPy':
-		command => "python setup.py install",
-		cwd => "${scalr_install_dir}/${scalr_source_url}/"
-	}
->>>>>>> 621a7b7c76a6d3309ca25213688c338920753a1e
 
+	#Give ownership to the scalr/app/www to www-data
 	#Install Mysql 
 
 	#Install rrdtool,rrdcached using using system package manager

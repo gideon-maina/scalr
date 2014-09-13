@@ -18,7 +18,7 @@ class scalr::params {
 	$message_sender_logfile = ''
 	$database_queue_pidfile = ''
 	$database_queue_logfile = ''
-	$plotter_pidfile = ''
+	${plotter_pidfile} = ''
 	$plotter_logfile = ''
 	$poller_pidfile = ''
 	$poller_logfile = ''
@@ -60,6 +60,7 @@ class scalr::params {
 		$rrdtool = 'rrdtool'
 		$rrddcached = 'rrdcached'
 		$apache = 'apache2'
+		$apache2_config = ''
 		$cron = 'cron'
 
 	}
@@ -90,6 +91,7 @@ class scalr::params {
 		$rrdtool = 'rrdtool'
 		$rrddcached = 'rrdcached'
 		$apache = ''
+		$apache2_config = ''
 		$cron =''
 	}
 	redhat:{
@@ -119,8 +121,11 @@ class scalr::params {
 		$rrdtool = ''
 		$rrddcached = ''
 		$apache = ''
+		$apache2_config = ''
 		$cron = ''
 	}
+	#Assuming that the default will agree to the following otherwise can issue a notify
+	#of no support for the distribution.
 	default: {
 		$php = 'php5-dev'
 		$php_sockets = 'php-net-socket'
@@ -148,6 +153,7 @@ class scalr::params {
 		$rrdtool = 'rrdtool'
 		$rrddcached = 'rrdcached'
 		$apache = 'apache2'
+		$apache2_config = ''
 		$cron = 'cron'
 	}
   }#End case statement
@@ -161,23 +167,54 @@ class scalr::params {
   	$scalr_source_url = 'https://github.com/Scalr/scalr/archive/v4.5.1.tar.gz'
   	$scalr_install_dir = '/opt/scalr/'
   	$scalr_tar_target = '/tmp/scalr.tar.gz'
+  	$scalr_new_config = ''
+  	$scalr_original_config = ''
 #Would like the version given as a user input
-
-#python M2crypto 
+	$rrd_config = ''
+#python M2crypto since pip is universal
 	$python_m2crypto = 'M2Crypto'
 
+#The cron jobs for the scalr instance variables
+	$cron_scheduler = "* * * * * php -q ${scalr_install_dir}/app/cron/cron.php --Scheduler"
+	$cron_usagestats = "*/5 * * * *  php -q ${scalr_install_dir}/app/cron/cron.php --UsageStatsPoller"
+	$cron_scaling = "*/2 * * * *  php -q ${scalr_install_dir}/app/cron-ng/cron.php --Scaling"		
+	$cron_szr_message = "*/2 * * * *  php -q ${scalr_install_dir}/app/cron/cron.php --SzrMessagingAll"
+    $cron_messagebeforehostup = "*/2 * * * * php -q ${scalr_install_dir}/app/cron/cron.php --SzrMessagingBeforeHostUp"
+    $cron_messageinit = "*/2 * * * * php -q ${scalr_install_dir}/app/cron/cron.php --SzrMessagingHostInit"
+    $cron_messagehostup = "*/2 * * * * php -q ${scalr_install_dir}/app/cron/cron.php --SzrMessagingHostUp"
+	$cron_bundletaskmgr = "*/2 * * * * php -q ${scalr_install_dir}/app/cron/cron.php --BundleTasksManager"
+	$cron_metriccheck = "*/15 * * * * php -q ${scalr_install_dir}/app/cron-ng/cron.php --MetricCheck"
+	$cron_poller = "*/2 * * * * php -q ${scalr_install_dir}/app/cron-ng/cron.php --Poller"
+	$cron_dnsmanagerpoll = "* * * * * php -q ${scalr_install_dir}/app/cron/cron.php --DNSManagerPoll"
+	$cron_rotatelogs = "17 5 * * * php -q ${scalr_install_dir}/app/cron/cron.php --RotateLogs"
+	$cron_ebsmanager = "*/2 * * * * php -q ${scalr_install_dir}/app/cron/cron.php --EBSManager"
+	$cron_rolesqueue = "*/20 * * * * php -q ${scalr_install_dir}/app/cron/cron.php --RolesQueue"
+	$cron_dbsrmaintain = "*/5 * * * * php -q ${scalr_install_dir}/app/cron-ng/cron.php --DbMsrMaintenance"
+	$cron_leasemanger = "*/20 * * * * php -q ${scalr_install_dir}/app/cron-ng/cron.php --LeaseManager"
+	$cron_serverterminate = "*/1 * * * * php -q ${scalr_install_dir}/app/cron-ng/cron.php --ServerTerminate"
+	$cron_cloud_pricing = "0 */12 * * * php -q ${scalr_install_dir}/app/cron/cron.php --CloudPricing"
+	$cron_analyticsnotifications = "0 1 * * * php -q ${scalr_install_dir}/app/cron/cron.php --AnalyticsNotifications"
+	$cron_analyticspoller = "*/5  * * * * python -m scalrpy.analytics_poller -c ${scalr_install_dir}/app/etc/config.yml --start"
+	$cron_analyticsprocessing = "7,37 * * * * python -m scalrpy.analytics_processing -c ${scalr_install_dir}/app/etc/config.yml --start"
 
+#The daemons to be run for the scalr install
+	$messange_sender = "python -m scalrpy.msg_sender -p ${message_sender_pidfile} -l ${message_sender_logfile} -c ${scalr_install_dir}/app/etc/config.yml --start"
+	$database_queue = "python -m scalrpy.dbqueue_event -p ${database_queue_pidfile} -l ${database_queue_logfile} -c ${scalr_install_dir}/app/etc/config.yml --start"
+	$load_statistics_plotter = "python -m scalrpy.load_statistics -p ${plotter_pidfile} -l ${plotter_logfile} -c ${scalr_install_dir}/app/etc/config.yml --plotter --start"
+	$load_statistics_poller = "python -m scalrpy.load_statistics -p ${poller_pidfile} -l ${poller_logfile} -c ${scalr_install_dir}/app/etc/config.yml --poller --start"
+	$scalarizr_update = "python -m scalrpy.szr_upd_service -p ${scalarizr_pidfile} -l ${scalarizr_logfile} -c ${scalr_install_dir}/app/etc/config.yml --interval=120 --start"
 #Other general parameters that are needed by the scalr instance
 
 	$timezone = 'UTC'	
+	$php_timezone = 'UTC'
 	$mysql_user = 'scalr'
 	$mysql_password = 'Thepassword'
 	$mysql_scalr_database = 'scalr'
 	$mysql_scalr_cost_analytics = 'scalr_analytics'
 	$mysql_timezone = 'UTC'
 
-	$scalr_cache_folder = 'cache'#put /scalr_install/app/ where used
-	$graphics_dir = 'graphics'#put /scalr_install/app/ where used
+	$scalr_cache_folder = 'cache'#put /scalr_install_dir/app/ where used
+	$graphics_dir = 'graphics'#put /scalr_install_dir/app/ where used
 	$data_dir1 = '/var/lib/rrdcached/db/x1x6'
 	$data_dir2 = '/var/lib/rrdcached/db/x2x7'
 	$data_dir3 = '/var/lib/rrdcached/db/x3x8'
