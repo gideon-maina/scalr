@@ -1,6 +1,6 @@
 #Tis class will makke sure that all the dependencies are installed and met.
 
-class scalr::install  (
+class scalr::install(
 #Declare the parameters to be used from the parameters class
 $php = $scalr::params::php,
 $php_sockets = $scalr::params::php_sockets,

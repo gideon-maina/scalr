@@ -124,6 +124,7 @@ inherits scalr::params {
 	exec {"Copying the scalr config to the working dir":
 			command => "cp ${scalr_install_dir}/${scalr_original_config} ${scalr_install_dir}/${scalr_new_config}",
 			creates => "{scalr_install_dir}/${scalr_new_config}",
+			logoutput => on_failure,
 	}
 	#Run the database migrations
 	exec {"Run the database migrations for scalr database":
@@ -147,6 +148,7 @@ inherits scalr::params {
 	exec {$daemons:
 		#Will take the command from the variable
 	}
+	
 	#Single command for each set up 
 	#1 Message sender
 	#exec {"The message sender daemon":

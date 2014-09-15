@@ -18,7 +18,7 @@ class scalr::params {
 	$message_sender_logfile = ''
 	$database_queue_pidfile = ''
 	$database_queue_logfile = ''
-	${plotter_pidfile} = ''
+	$plotter_pidfile = ''
 	$plotter_logfile = ''
 	$poller_pidfile = ''
 	$poller_logfile = ''
