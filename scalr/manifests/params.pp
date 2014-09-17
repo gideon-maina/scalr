@@ -25,15 +25,16 @@ class scalr::params {
 	$scalarizr_pidfile = ''
 	$scalarizr_logfile = ''
 	
-	$module_name = 'scalr'
+	#$module_name = 'scalr'
 	$module_version = '1'
 
 	#The scalr source url
-
+	$php_ini = '/tmp/php.ini'
+	$php_ini_template = 'php.ini.erb'
+	$apache2_config_template = 'apache_virtual_host.erb'
 	#The software package names for the distros
-
-	case operatingsystem ? {
-	ubuntu debian:{
+	case $::operatingsystem {
+	'debian':{
 		$php = 'php5-dev'
 		$php_sockets = 'php-net-socket'
 		$php_gettext = 'php-gettext'
@@ -131,17 +132,17 @@ class scalr::params {
 		$php_sockets = 'php-net-socket'
 		$php_gettext = 'php-gettext'
 		$php_mcrypt = 'php5-mcrypt'
-		$php_hash = ''
-		$php_pcntl = ''
-		$php_posix =''
-		$php_dom = ''
-		$php_soap = ''
+		$php_hash = 'hash'
+		$php_pcntl = 'pcntl'
+		$php_posix ='posix'
+		$php_dom = 'dom'
+		$php_soap = 'soap'
 		$php_snmp = 'php5-snmp'
-		$php_mysqli = ''
+		$php_mysqli = 'mysqli'
 		$php_curl = 'php5-curl'
-		$php_sem = ''
+		$php_sem = 'sem'
 		$php_ldap = 'php5-ldap'
-		$php_pecl = ''
+		$php_pecl = 'pecl'
 		$python_dev = 'python-dev'
 		$python_libevent = 'libevent-dev'
 		$python_pip = 'python-setuptools'
@@ -153,7 +154,7 @@ class scalr::params {
 		$rrdtool = 'rrdtool'
 		$rrddcached = 'rrdcached'
 		$apache = 'apache2'
-		$apache2_config = ''
+		$apache2_config = '/etc/apache2/apache2.conf'
 		$cron = 'cron'
 	}
   }#End case statement
@@ -161,7 +162,7 @@ class scalr::params {
   	$python_rrdtool = 'python-rrdtool'
 	$pecl_http = 'pecl_http'
 	$pecl_rrd = 'rrd'
-	pecl_yaml = 'yaml'
+	$pecl_yaml = 'yaml'
 	$pecl_ssh2 = 'ssh2'
   #Scalr install parameters
   	$scalr_source_url = 'https://github.com/Scalr/scalr/archive/v4.5.1.tar.gz'

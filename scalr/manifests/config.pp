@@ -8,6 +8,7 @@ $super_user = $scalr::params::super_user,
 $scalr_group = $scalr::params::scalr_group,
 
 $scalr_install_dir = $scalr::params::scalr_install_dir,
+$scalr_cache_folder = $scalr::params::scalr_cache_folder,
 $scalr_errorlog = $scalr::params::scalr_errorlog,
 $scalr_accesslog = $scalr::params::scalr_accesslog,
 $message_sender_pidfile = $scalr::params::message_sender_pidfile,
@@ -20,7 +21,7 @@ $poller_pidfile = $scalr::params::poller_pidfile,
 $poller_logfile = $scalr::params::poller_logfile,
 $scalarizr_pidfile = $scalr::params::scalarizr_pidfile,
 $scalarizr_logfile = $scalr::params::scalarizr_logfile,
-$module_name = $scalr::params::module_name,
+#$module_name = $scalr::params::module_name,
 $rrd_config = $scalr::params::rrd_config,
 scalr_new_config = $scalr::params::scalr_new_config,
 scalr_original_config = $scalr::params::scalr_original_config,
@@ -56,6 +57,9 @@ $database_queue = $scalr::params::database_queue,
 $load_statistics_plotter = $scalr::params::load_statistics_plotter,
 $load_statistics_poller = $scalr::params::load_statistics_poller,
 $scalarizr_update = $scalr::params::scalarizr_update,
+$php_ini_template = $scalr::params::php_ini_template,
+$php_ini = $scalr::params::php_ini,
+$apache2_config_template = $scalr::params::apache2_config_template
 )
 inherits scalr::params {
 	#Global settings
@@ -68,7 +72,7 @@ inherits scalr::params {
 	file {"PHP ini file with necessary changes":
 		path => $php_ini,
 		ensure => file,
-		content => template($php_ini_template),
+		content => template("scalr/${php_ini_template}"),
 	}
 	#Take care of SELinux unpacked directory to be accessible via the web server
 
@@ -79,8 +83,7 @@ inherits scalr::params {
 	#Set MySQL timezone to Php time zone (i.e UTC)
 
 	#Create the cache folder for Scalr
-	file {"cache folder inside scalr/app/":
-			path => "${scalr_install_dir}/${scalr_cache_folder}/",
+	file {"$scalr_install_dir$scalr_cache_folder":
 			ensure => directory,
 			mode => 0770,
 			owner => $service_user,
@@ -88,18 +91,17 @@ inherits scalr::params {
 	}
 	#Configure rrdcached by modifying /etc/default/rrdcached(restart the rrdcached service)
 	#Use augeas for the addition into the file 
-	augeas {"Modifying the file /etc/default/rrdcached":
-			context => $rrd_config,
-			changes => [PTS="-s ${scalr_group}"
-						OPTS="\$OPTS -l unix:/var/run/rrdcached.sock"
-						OPTS="\$OPTS -j /var/lib/rrdcached/journal/ -F"
-						OPTS="\$OPTS -b /var/lib/rrdcached/db/ -B"],
+	#augeas {"Modifying the file /etc/default/rrdcached":
+	#		context => $rrd_config,
+	#		changes => [OPTS="-s ${scalr_group}"
+	#					OPTS="\$OPTS -l unix:/var/run/rrdcached.sock"
+	#					OPTS="\$OPTS -j /var/lib/rrdcached/journal/ -F"
+	#					OPTS="\$OPTS -b /var/lib/rrdcached/db/ -B"],
 			#need to refresh the rrdcached service after changes
-			notify => Service['rrdcached'],
-	}
+	#		notify => Service['scalr::rrdcached'],
+	#}
 	#Create the required graph directory
-	file {"Graph directories":
-			path => "${scalr_install_dir}/${graphics_dir}",
+	file {"$scalr_install_dir$graphics_dir":
 			ensure => directory,
 			owner => $service_user,
 			group => $scalr_group,
@@ -115,10 +117,9 @@ inherits scalr::params {
 	}
 
 	#Configure the Apache2 web server Virtualhost 
-	file {"Apache2 Virtualhost":
-			path => $apache2_config,
+	file {$apache2_config:
 			ensure => file,
-			content => template($apache_virtual_host.erb),
+			content => template("scalr/${apache2_config_template}"),
 	}
 	#Setting the configuration templates
 	exec {"Copying the scalr config to the working dir":
@@ -128,13 +129,12 @@ inherits scalr::params {
 	}
 	#Run the database migrations
 	exec {"Run the database migrations for scalr database":
-			command =>,
+			command => "set three",
 	}
 	#Configure the scalr Cron jobs for the scalr instance(php cron jobs)
 	$all_cron_jobs = [$cron_scheduler,$cron_usagestats,$cron_scaling,$cron_szr_message,cron_messagebeforehostup,$cron_messageinit,$cron_messagehostup,$cron_bundletaskmgr,$cron_metriccheck,$cron_poller,$cron_dnsmanagerpoll,$cron_rotatelogs,$cron_ebsmanager,$cron_rolesqueue,$cron_dbsrmaintain,$cron_leasemanger,$cron_serverterminate,$cron_cloud_pricing,$cron_analyticsnotifications,$cron_analyticspoller,$cron_analyticsprocessing]	
-	cron {"The Cron jobs  sseent to this resource as an array above":
+	cron {$all_cron_jobs:
 		#Set cron timezone to UTC
-		command => $all_cron_jobs,
 		ensure => present,
 		provider => crontab,
 		user => $service_user,

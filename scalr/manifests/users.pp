@@ -15,23 +15,20 @@ class scalr::users (
 ) 
 inherits scalr::params {
 	#The following will ensure that the above users are present 
-	user {"The Scalr service_user":
-		name => $service_user,
+	user {$service_user:
 		ensure => present,
-		group => $scalr_group,
+		groups => $scalr_group,
 		uid => $service_user_id,
-		gid => $,
-		password => '',
+		gid => $scalr_group_id,
+		password => 'password',
 		#system => true,
 		provider => $user_group_provider,
-		require => Group[$scalr_group],
+		require => Group["Scalr group"],
 	} 	
-	user {"The web server user www-data":
-		name => $web_user,
+	user {$web_user:
 		ensure => present,
 	}
-	group {"The scalr groups that scalr user belongs to": 
-		name => $scalr_group,
+	group {$scalr_group:
 		ensure => present,
 		gid => $scalr_group_id,
 		#system => true

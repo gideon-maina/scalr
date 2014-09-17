@@ -1,11 +1,11 @@
 #Tis class will makke sure that all the dependencies are installed and met.
 
-class scalr::install(
+class scalr::install  (
 #Declare the parameters to be used from the parameters class
 $php = $scalr::params::php,
 $php_sockets = $scalr::params::php_sockets,
 $php_gettext = $scalr::params::php_gettext,
-$php_mcrypt = $scalr::params::php5_mcrypt,
+$php_mcrypt = $scalr::params::php_mcrypt,
 $php_pcntl = $scalr::params::php_pcntl,
 $php_posix = $scalr::params::php_posix,
 $php_dom = $scalr::params::php_dom,
@@ -15,7 +15,7 @@ $php_snmp = $scalr::params::php_snmp,
 $php_curl = $scalr::params::php_curl,
 $php_ldap = $scalr::params::php_ldap,
 $python_dev = $scalr::params::python_dev,
-$python_libevent = $scalr::params::$python_libevent,
+$python_libevent = $scalr::params::python_libevent,
 $python_pip = $scalr::params::python_pip,
 $python_rrdtool = $scalr::params::python_rrdtool,
 $pecl_http = $scalr::params::pecl_http,
@@ -28,10 +28,10 @@ $rrdcached = $scalr::params::rrdcached,
 $apache = $scalr::params::apache,
 $cron = $scalr::params::cron,
 $python_m2crypto = $scalr::params::python_m2crypto,
-$python_snmp = scalr::params::$python_snmp,
-$snmp_base = scalr::params::snmp_base
-$snmp15 = scalr::params::snmp15
-$snmp = scalr::params::snmp
+$python_snmp = scalr::params::python_snmp,
+$snmp_base = scalr::params::snmp_base,
+$snmp15 = scalr::params::snmp15,
+$snmp = scalr::params::snmp,
 $scalr_source_url = scalr::params::scalr_source_url,
 $scalr_install_dir = scalr::params::scalr_install_dir,
 $scalr_tar_target = scalr::params::scalr_tar_target
@@ -43,110 +43,36 @@ inherits scalr::params {
 		path => [ "/bin/","/usr/bin", "/usr/local/sbin/" , "/usr/local/bin/" ] 
 	}
 	#Php dependencies using system package manager
-	package {'Php':
-		name => $php,
-		ensure => "5.5",
-		require => Exec["apt-get update"]
-
-	}
 	#Php extensions using system package manager
-	package {'php sockets':
-		name => $php_sockets,
-		ensure => present
+	$php_packages = [$php,$php_sockets,$php_gettext,$php_mcrypt,$php_pcntl,$php_posix,$php_dom,$php_soap,$php_mysqli,$php_snmp,$php_curl,$php_ldap,]
 
-	}
-	package {'php gettext': 
-		name => $php_gettext,
-		ensure => present
-
-	}
-	package {'phpmcrypt':
-		name => $php_mcrypt,
-		ensure => present
-
-	}
-	package {'php pcnt':
-		name => $php_pcntl,
-		ensure => present
-
-	}
-	package {'php posix':
-		name => $php_posix,
-		ensure => present
-	}
-	package {'php dom':
-		name => $php_dom,
-		ensure => present
-
-	}
-	package {'php soap':
-		name => $php_soap,
-		ensure => present
-
-	}
-	package {'php mysqli':
-		name=> $php_mysqli,
-		ensure => present
-	}
-	package {'php snmp':
-		name => $php_snmp,
-		ensure => present
-
-	}
-	package {'php curl ':
-		name => $php_curl,
-		ensure => present
-
-	}
-	package {'php ldap':
-		name => $php_ldap,
-		ensure => present
-
+	package {$php_packages:
+		ensure => present,
 	}
 	#Php Pecls using pecl
 ###################	
-	#$php_pecls = ["$pecl_http","$pecl_rrd","$pecl_yaml","$pecl_ssh2",]
-	#package {$php_pecls:
-	#	ensure => present,
-	#	provider => pecl
-	#}
-#################
+	$php_pecls = ["$pecl_rrd","$pecl_yaml","$pecl_ssh2",]
+	package {$php_pecls:
+		ensure => present,
+		provider => pecl
+	}
+################
 	#Make sure that the http pecl is less than version 2
 	package {'Pecl http':
 		name => $pecl_http,
 		ensure => "1.7.6",
 		provider => pecl
 	}
-	package {'Pecl rrd':
-		name => $pecl_rrd,
-		ensure => present,
-		provider => pecl
-	}
-	package {'Pecl yaml':
-		name => $pecl_yaml,
-		ensure => present,
-		provider => pecl
-	}
-	package {'Pecl ssh2':
-		name => $pecl_ssh2,
-		ensure => present,
-		provider => pecl
-	}
-
 	#Python system packages
-	package {'python dev':
-		name => $python_dev,
-		ensure = present
+	package {$python_dev:
+		ensure => present
 
 	}
-	package {'python libevent':
-		name => $python_libevent,
+	package {$python_libevent:
 		ensure => present
 	}
-	package {'Python pip':
-		name => $python_pip,
+	package {$python_pip:
 		ensure => present,
-		provider => pip
 	}
 
 	#Python packages using pip	
@@ -224,11 +150,11 @@ inherits scalr::params {
 		ensure => present
 	}
 	#Install Apache2 Web server using system package manager
-	package {'apache web server':
+	package {$apache:
 		name => $apache,
 		ensure => present
 	}
-	packaged {"Cron jobs":
+	package {"Cron jobs":
 		name => $cron,
 		ensure => present
 	}
