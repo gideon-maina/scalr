@@ -1,10 +1,9 @@
-<%# /etc/puppet/modules/scalr/templates/apache2.erb%>
-   <VirtualHost *:80>
-    ServerName <%= @your_ip_public_dn %>
-    
+	<%# /etc/puppet/modules/scalr/templates/apache2.erb%>
+    <VirtualHost *:80>
+    ServerName <%= @ipaddress %>
     ServerAdmin <%= @service_user %>
-    DocumentRoot <%=  @scalr_install_dir   %>scalr-<%=  @scalr_version   %>/app/www
-    <Directory <%=  @scalr_install_dir   %>scalr-<%=  @scalr_version   %>/app/www>
+    DocumentRoot <%= @scalr_install_dir %>/app/www
+    <Directory <%= @scalr_install_dir %>/app/www>
         Options -Indexes +FollowSymLinks +MultiViews
         AllowOverride All
         Order allow,deny

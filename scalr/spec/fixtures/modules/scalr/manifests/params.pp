@@ -26,7 +26,7 @@ class scalr::params {
 	$scalarizr_logfile      = ''
 	
 	#$module_name = 'scalr'
-	$module_version          = '1'
+	$module_version         = '1'
 
 	#The scalr source url
 	$php_ini                 = '/tmp/php.ini'

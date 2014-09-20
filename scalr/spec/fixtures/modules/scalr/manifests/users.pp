@@ -10,8 +10,8 @@ class scalr::users (
 	$scalr_group          = $scalr::params::scalr_group,
 	$super_user           = $scalr::params::super_user,
 	$user_group_provider  = $scalr::params::user_provider,
-	$service_user_id      = $scalr::params::service_user_id,
-	$scalr_group_id       = $scalr::params::scalr_group_id
+	$service_user_id      = scalr::params::service_user_id,
+	$scalr_group_id       = scalr::params::scalr_group_id
 ) 
 inherits scalr::params {
 	#The following will ensure that the above users are present 
@@ -19,10 +19,11 @@ inherits scalr::params {
 		ensure     => present,
 		groups     => $scalr_group,
 		uid        => $service_user_id,
+		gid        => $scalr_group_id,
 		password   => 'password',
-		system     => true,
-		#provider   => $user_group_provider,
-		require    => Group[$scalr_group],
+		#system     => true,
+		provider   => $user_group_provider,
+		require    => Group["Scalr group"],
 	} 	
 	user {$web_user:
 		ensure    => present,
@@ -30,8 +31,9 @@ inherits scalr::params {
 	group {$scalr_group:
 		ensure    => present,
 		gid       => $scalr_group_id,
-		system    => true
-		#provider  => $user_group_provider,
+		#system   => true
+		provider  => $user_group_provider,
+
 	}
 
 }
