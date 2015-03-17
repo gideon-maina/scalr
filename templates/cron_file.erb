@@ -1,0 +1,21 @@
+* * * * * php -q <%=  @scalr_install_dir   %>scalr-<%=  @scalr_version   %>/app/cron/cron.php --Scheduler 
+*/5 * * * *  php -q <%=  @scalr_install_dir   %>scalr-<%=  @scalr_version   %>/app/cron/cron.php --UsageStatsPoller 
+*/2 * * * *  php -q <%=  @scalr_install_dir   %>scalr-<%=  @scalr_version   %>/app/cron-ng/cron.php --Scaling 		
+*/2 * * * *  php -q <%=  @scalr_install_dir   %>scalr-<%=  @scalr_version   %>/app/cron/cron.php --SzrMessagingAll 
+*/2 * * * * php -q <%=  @scalr_install_dir   %>scalr-<%=  @scalr_version   %>/app/cron/cron.php --SzrMessagingBeforeHostUp 
+*/2 * * * * php -q <%=scalr_install_dir   %>scalr-<%=  @scalr_version   %>/app/cron/cron.php --SzrMessagingHostInit 
+*/2 * * * * php -q <%=  @scalr_install_dir   %>scalr-<%=  @scalr_version   %>/app/cron/cron.php --SzrMessagingHostUp 
+*/2 * * * * php -q <%=  @scalr_install_dir   %>scalr-<%=  @scalr_version   %>/app/cron/cron.php --BundleTasksManager 
+*/15 * * * * php -q <%=  @scalr_install_dir   %>scalr-<%=  @scalr_version   %>/app/cron-ng/cron.php --MetricCheck 
+*/2 * * * * php -q <%=  @scalr_install_dir   %>scalr-<%=  @scalr_version   %>/app/cron-ng/cron.php --Poller 
+* * * * * php -q <%=  @scalr_install_dir   %>scalr-<%=  @scalr_version   %>/app/cron/cron.php --DNSManagerPoll 
+17 5 * * * php -q <%=  @scalr_install_dir   %>scalr-<%=  @scalr_version   %>/app/cron/cron.php --RotateLogs 
+*/2 * * * * php -q <%=  @scalr_install_dir   %>scalr-<%=  @scalr_version   %>/app/cron/cron.php --EBSManager 
+*/20 * * * * php -q <%=  @scalr_install_dir   %>scalr-<%=  @scalr_version   %>/app/cron/cron.php --RolesQueue 
+*/5 * * * * php -q <%=  @scalr_install_dir   %>scalr-<%=  @scalr_version   %>/app/cron-ng/cron.php --DbMsrMaintenance 
+*/20 * * * * php -q <%=  @scalr_install_dir   %>scalr-<%=  @scalr_version   %>/app/cron-ng/cron.php --LeaseManager 
+*/1 * * * * php -q <%=  @scalr_install_dir   %>scalr-<%=  @scalr_version   %>/app/cron-ng/cron.php --ServerTerminate 
+0 */12 * * * php -q <%=  @scalr_install_dir   %>scalr-<%=  @scalr_version   %>/app/cron/cron.php --CloudPricing 
+0 1 * * * php -q <%=  @scalr_install_dir   %>scalr-<%=  @scalr_version   %>/app/cron/cron.php --AnalyticsNotifications 
+*/5  * * * * python -m scalrpy.analytics_poller -c <%=  @scalr_install_dir   %>scalr-<%=  @scalr_version   %>/app/etc/config.yml --start 
+7,37 * * * * python -m scalrpy.analytics_processing -c <%=  @scalr_install_dir   %>scalr-<%=  @scalr_version   %>/app/etc/config.yml --start 

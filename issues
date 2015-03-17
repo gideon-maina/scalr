@@ -1,0 +1,10 @@
+issues
+
+The input to place inside the apache.erb template at Servername
+
+facter can check whether SELinux is true or false
+
+How to add using augeas bringing problems
+
+Mysql integration 
+

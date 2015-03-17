@@ -1,0 +1,17 @@
+<%# /etc/puppet/modules/scalr/templates/apache2.erb%>
+   <VirtualHost *:80>
+    ServerName <%= @your_ip_public_dn %>
+    
+    ServerAdmin <%= @service_user %>
+    DocumentRoot <%=  @scalr_install_dir   %>scalr-<%=  @scalr_version   %>/app/www
+    <Directory <%=  @scalr_install_dir   %>scalr-<%=  @scalr_version   %>/app/www>
+        Options -Indexes +FollowSymLinks +MultiViews
+        AllowOverride All
+        Order allow,deny
+        allow from all
+        Require all granted
+    </Directory>
+    ErrorLog <%= @scalr_errorlog %>
+    CustomLog <%= @scalr_accesslog %> combined
+    LogLevel warn
+	</VirtualHost>
